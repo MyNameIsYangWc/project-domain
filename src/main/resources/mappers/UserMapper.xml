@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chao.domain.dao.UserMapper">
+    <sql id="sql">
+        id,
+        account,
+        `password`,
+        create_time,
+        last_update,
+        dele_flag
+    </sql>
+
+    <insert id="insertUser" parameterType="com.chao.domain.model.User">
+        INSERT INTO `user`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+          <if test="id != null">
+              id,
+          </if>
+          <if test="account != null">
+              account,
+          </if>
+          <if test="password != null">
+            password,
+          </if>
+          <if test="sex !=null and sex!=''">
+            sex,
+          </if>
+          <if test="birthday !=null">
+            birthday,
+          </if>
+          <if test="userName !=null and userName!=''">
+            user_name,
+          </if>
+          <if test="email !=null and email!=''">
+            email,
+          </if>
+          <if test="createTime != null">
+            create_time,
+          </if>
+          <if test="lastUpdate != null">
+            last_update,
+          </if>
+          <if test="delFlag != null">
+           dele_flag,
+          </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="account != null">
+                #{account},
+            </if>
+            <if test="password != null">
+                #{password},
+            </if>
+            <if test="sex !=null and sex!=''">
+                #{sex},
+            </if>
+            <if test="birthday !=null">
+                #{birthday},
+            </if>
+            <if test="userName !=null and userName!=''">
+                #{userName},
+            </if>
+            <if test="email !=null and email!=''">
+                #{email},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="lastUpdate != null">
+                #{lastUpdate},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+        </trim>
+    </insert>
+    <select id="selectUser" resultType="com.chao.domain.model.User">
+        select
+         <include refid="sql"/>
+        from user
+        <where>
+            <if test="id != null">
+                and id=#{id}
+            </if>
+            <if test="account != null and account != ''">
+                and account=#{account}
+            </if>
+            <if test="password != null and password != ''">
+                and password=#{password}
+            </if>
+            <if test="createTime != null">
+                and create_time=#{createTime}
+            </if>
+            <if test="lastUpdate != null">
+                and last_update=#{lastUpdate}
+            </if>
+                and dele_flag=0
+        </where>
+    </select>
+</mapper>

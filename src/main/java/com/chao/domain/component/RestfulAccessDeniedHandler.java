@@ -1,8 +1,5 @@
 package com.chao.domain.component;
 
-//import cn.hutool.json.JSONUtil;
-//import com.macro.mall.common.api.CommonResult;
-import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.chao.domain.result.Result;
 import com.chao.domain.result.ResultCode;

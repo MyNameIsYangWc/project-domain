@@ -10,10 +10,8 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Api(value = "LoginController",description = "登录")
@@ -38,6 +36,25 @@ public class LoginController {
         logger.info("###userLogin参数为：###"+user);
         Result result = uerService.userLogin(user);
 
+        return result;
+    }
+
+    /**
+     * 退出
+     * @param username
+     * @author 杨文超
+     * @date 2020-06-29
+     */
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username",value = "账号",required = true,dataType = "String",paramType = "query"),
+
+            @ApiImplicitParam(name = "Authorization",value = "token",required = true,dataType = "String",paramType = "header"),
+            @ApiImplicitParam(name = "Accept",value = "",required = false,dataType = "String",paramType = "header",defaultValue = "application/json")
+    })
+    @GetMapping("/userlogout")
+    public Result logout(@RequestParam String username){
+
+        Result result = uerService.logout(username);
         return result;
     }
 

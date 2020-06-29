@@ -8,4 +8,6 @@ public interface UserService {
     Result insertUser(User user);
 
     Result userLogin(User user);
+
+    Result logout(String username);
 }

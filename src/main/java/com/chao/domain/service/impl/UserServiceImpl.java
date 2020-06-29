@@ -63,6 +63,23 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 退出
+     * @param username
+     * @author 杨文超
+     * @date 2020-06-29
+     */
+    @Override
+    public Result logout(String username) {
+
+        Boolean isLogout = redisTemplate.delete(username);
+        if(isLogout){
+            return new Result(ResultCode.successCode.getCode(),ResultCode.successCode.getMsg());
+        }
+        return new Result(ResultCode.businErrorCode.getCode(),"用户已失效/用户未登录");
+
+    }
+
+    /**
      * 查询用户信息
      */
     public Result selectUserInformation(User user) {

@@ -1,6 +1,6 @@
 package com.chao.domain.dao;
 
-import com.chao.domain.model.ttachment;
+import com.chao.domain.model.Attachment;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -8,15 +8,15 @@ import org.springframework.stereotype.Repository;
 public interface AttachmentMapper {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(ttachment record);
+    int insert(Attachment record);
 
-    int insertSelective(ttachment record);
+    int insertSelective(Attachment record);
 
-    ttachment selectByPrimaryKey(Integer id);
+    Attachment selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(ttachment record);
+    int updateByPrimaryKeySelective(Attachment record);
 
-    int updateByPrimaryKey(ttachment record);
+    int updateByPrimaryKey(Attachment record);
 
     String selectUserImage(@Param("username") String username);
 }

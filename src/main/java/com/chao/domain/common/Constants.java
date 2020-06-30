@@ -1,9 +1,11 @@
 package com.chao.domain.common;
 
 /**
- * 常量类
+ * 定义常量池
+ * @author 杨文超
+ * @date 2020-06-27
  */
-public class Constants {
+public interface Constants {
 
-    public static int EXP=60*60;//token有效时间
+   int EXP=60*60;//token有效时间
 }

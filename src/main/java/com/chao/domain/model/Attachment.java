@@ -1,6 +1,6 @@
 package com.chao.domain.model;
 
-public class ttachment {
+public class Attachment {
     private Integer id;
 
     private String username;
@@ -13,7 +13,7 @@ public class ttachment {
 
     private String fileTypeName;
 
-    private Byte delFlag;
+    private boolean delFlag;
 
     public Integer getId() {
         return id;
@@ -63,11 +63,11 @@ public class ttachment {
         this.fileTypeName = fileTypeName;
     }
 
-    public Byte getDelFlag() {
+    public boolean getDelFlag() {
         return delFlag;
     }
 
-    public void setDelFlag(Byte delFlag) {
+    public void setDelFlag(boolean delFlag) {
         this.delFlag = delFlag;
     }
 }

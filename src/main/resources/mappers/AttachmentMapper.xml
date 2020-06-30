@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.chao.domain.dao.AttachmentMapper" >
-  <resultMap id="BaseResultMap" type="com.chao.domain.model.ttachment" >
+  <resultMap id="BaseResultMap" type="com.chao.domain.model.Attachment" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="file_id" property="fileId" jdbcType="VARCHAR" />
@@ -34,7 +34,7 @@
     delete from attachment
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.chao.domain.model.ttachment" >
+  <insert id="insert" parameterType="com.chao.domain.model.Attachment" >
     insert into attachment (id, username, file_id, 
       file_name, file_type_cd, file_type_name, 
       del_flag)
@@ -42,7 +42,7 @@
       #{fileName,jdbcType=VARCHAR}, #{fileTypeCd,jdbcType=CHAR}, #{fileTypeName,jdbcType=VARCHAR}, 
       #{delFlag,jdbcType=TINYINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.chao.domain.model.ttachment" >
+  <insert id="insertSelective" parameterType="com.chao.domain.model.Attachment" >
     insert into attachment
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -91,7 +91,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.chao.domain.model.ttachment" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.chao.domain.model.Attachment" >
     update attachment
     <set >
       <if test="username != null" >
@@ -115,7 +115,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.chao.domain.model.ttachment" >
+  <update id="updateByPrimaryKey" parameterType="com.chao.domain.model.Attachment" >
     update attachment
     set username = #{username,jdbcType=VARCHAR},
       file_id = #{fileId,jdbcType=VARCHAR},

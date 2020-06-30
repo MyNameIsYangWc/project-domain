@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chao.domain.dao.AttachmentMapper" >
+  <resultMap id="BaseResultMap" type="com.chao.domain.model.ttachment" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="file_id" property="fileId" jdbcType="VARCHAR" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+    <result column="file_type_cd" property="fileTypeCd" jdbcType="CHAR" />
+    <result column="file_type_name" property="fileTypeName" jdbcType="VARCHAR" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, username, file_id, file_name, file_type_cd, file_type_name, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from attachment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!--查询用户头像-->
+  <select id="selectUserImage" resultType="java.lang.String">
+    SELECT
+        file_id
+    FROM
+        `attachment`
+    WHERE
+        file_type_cd = '1'
+    AND del_flag = 0
+    AND username = #{username}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from attachment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chao.domain.model.ttachment" >
+    insert into attachment (id, username, file_id, 
+      file_name, file_type_cd, file_type_name, 
+      del_flag)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{fileId,jdbcType=VARCHAR}, 
+      #{fileName,jdbcType=VARCHAR}, #{fileTypeCd,jdbcType=CHAR}, #{fileTypeName,jdbcType=VARCHAR}, 
+      #{delFlag,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chao.domain.model.ttachment" >
+    insert into attachment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="fileId != null" >
+        file_id,
+      </if>
+      <if test="fileName != null" >
+        file_name,
+      </if>
+      <if test="fileTypeCd != null" >
+        file_type_cd,
+      </if>
+      <if test="fileTypeName != null" >
+        file_type_name,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="fileId != null" >
+        #{fileId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileTypeCd != null" >
+        #{fileTypeCd,jdbcType=CHAR},
+      </if>
+      <if test="fileTypeName != null" >
+        #{fileTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chao.domain.model.ttachment" >
+    update attachment
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="fileId != null" >
+        file_id = #{fileId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileTypeCd != null" >
+        file_type_cd = #{fileTypeCd,jdbcType=CHAR},
+      </if>
+      <if test="fileTypeName != null" >
+        file_type_name = #{fileTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chao.domain.model.ttachment" >
+    update attachment
+    set username = #{username,jdbcType=VARCHAR},
+      file_id = #{fileId,jdbcType=VARCHAR},
+      file_name = #{fileName,jdbcType=VARCHAR},
+      file_type_cd = #{fileTypeCd,jdbcType=CHAR},
+      file_type_name = #{fileTypeName,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

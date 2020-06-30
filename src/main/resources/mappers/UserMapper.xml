@@ -1,104 +1,598 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chao.domain.dao.UserMapper">
-    <sql id="sql">
-        id,
-        account,
-        `password`,
-        create_time,
-        last_update,
-        dele_flag
-    </sql>
-
-    <insert id="insertUser" parameterType="com.chao.domain.model.User">
-        INSERT INTO `user`
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-          <if test="id != null">
-              id,
-          </if>
-          <if test="account != null">
-              account,
-          </if>
-          <if test="password != null">
-            password,
-          </if>
-          <if test="sex !=null and sex!=''">
-            sex,
-          </if>
-          <if test="birthday !=null">
-            birthday,
-          </if>
-          <if test="userName !=null and userName!=''">
-            user_name,
-          </if>
-          <if test="email !=null and email!=''">
-            email,
-          </if>
-          <if test="createTime != null">
-            create_time,
-          </if>
-          <if test="lastUpdate != null">
-            last_update,
-          </if>
-          <if test="delFlag != null">
-           dele_flag,
-          </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id},
-            </if>
-            <if test="account != null">
-                #{account},
-            </if>
-            <if test="password != null">
-                #{password},
-            </if>
-            <if test="sex !=null and sex!=''">
-                #{sex},
-            </if>
-            <if test="birthday !=null">
-                #{birthday},
-            </if>
-            <if test="userName !=null and userName!=''">
-                #{userName},
-            </if>
-            <if test="email !=null and email!=''">
-                #{email},
-            </if>
-            <if test="createTime != null">
-                #{createTime},
-            </if>
-            <if test="lastUpdate != null">
-                #{lastUpdate},
-            </if>
-            <if test="delFlag != null">
-                #{delFlag},
-            </if>
-        </trim>
-    </insert>
-    <select id="selectUser" resultType="com.chao.domain.model.User">
-        select
-         <include refid="sql"/>
-        from user
-        <where>
-            <if test="id != null">
-                and id=#{id}
-            </if>
-            <if test="account != null and account != ''">
-                and account=#{account}
-            </if>
-            <if test="password != null and password != ''">
-                and password=#{password}
-            </if>
-            <if test="createTime != null">
-                and create_time=#{createTime}
-            </if>
-            <if test="lastUpdate != null">
-                and last_update=#{lastUpdate}
-            </if>
-                and dele_flag=0
-        </where>
-    </select>
+  <resultMap id="BaseResultMap" type="com.chao.domain.model.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+  </resultMap>
+  <sql id="Blob_Column_List">
+    id, username, password, enabled
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user
+    where User = #{user,jdbcType=CHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.chao.domain.model.User">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="user != null">
+        User,
+      </if>
+      <if test="host != null">
+        Host,
+      </if>
+      <if test="selectPriv != null">
+        Select_priv,
+      </if>
+      <if test="insertPriv != null">
+        Insert_priv,
+      </if>
+      <if test="updatePriv != null">
+        Update_priv,
+      </if>
+      <if test="deletePriv != null">
+        Delete_priv,
+      </if>
+      <if test="createPriv != null">
+        Create_priv,
+      </if>
+      <if test="dropPriv != null">
+        Drop_priv,
+      </if>
+      <if test="reloadPriv != null">
+        Reload_priv,
+      </if>
+      <if test="shutdownPriv != null">
+        Shutdown_priv,
+      </if>
+      <if test="processPriv != null">
+        Process_priv,
+      </if>
+      <if test="filePriv != null">
+        File_priv,
+      </if>
+      <if test="grantPriv != null">
+        Grant_priv,
+      </if>
+      <if test="referencesPriv != null">
+        References_priv,
+      </if>
+      <if test="indexPriv != null">
+        Index_priv,
+      </if>
+      <if test="alterPriv != null">
+        Alter_priv,
+      </if>
+      <if test="showDbPriv != null">
+        Show_db_priv,
+      </if>
+      <if test="superPriv != null">
+        Super_priv,
+      </if>
+      <if test="createTmpTablePriv != null">
+        Create_tmp_table_priv,
+      </if>
+      <if test="lockTablesPriv != null">
+        Lock_tables_priv,
+      </if>
+      <if test="executePriv != null">
+        Execute_priv,
+      </if>
+      <if test="replSlavePriv != null">
+        Repl_slave_priv,
+      </if>
+      <if test="replClientPriv != null">
+        Repl_client_priv,
+      </if>
+      <if test="createViewPriv != null">
+        Create_view_priv,
+      </if>
+      <if test="showViewPriv != null">
+        Show_view_priv,
+      </if>
+      <if test="createRoutinePriv != null">
+        Create_routine_priv,
+      </if>
+      <if test="alterRoutinePriv != null">
+        Alter_routine_priv,
+      </if>
+      <if test="createUserPriv != null">
+        Create_user_priv,
+      </if>
+      <if test="eventPriv != null">
+        Event_priv,
+      </if>
+      <if test="triggerPriv != null">
+        Trigger_priv,
+      </if>
+      <if test="createTablespacePriv != null">
+        Create_tablespace_priv,
+      </if>
+      <if test="sslType != null">
+        ssl_type,
+      </if>
+      <if test="maxQuestions != null">
+        max_questions,
+      </if>
+      <if test="maxUpdates != null">
+        max_updates,
+      </if>
+      <if test="maxConnections != null">
+        max_connections,
+      </if>
+      <if test="maxUserConnections != null">
+        max_user_connections,
+      </if>
+      <if test="plugin != null">
+        plugin,
+      </if>
+      <if test="passwordExpired != null">
+        password_expired,
+      </if>
+      <if test="passwordLastChanged != null">
+        password_last_changed,
+      </if>
+      <if test="passwordLifetime != null">
+        password_lifetime,
+      </if>
+      <if test="accountLocked != null">
+        account_locked,
+      </if>
+      <if test="createRolePriv != null">
+        Create_role_priv,
+      </if>
+      <if test="dropRolePriv != null">
+        Drop_role_priv,
+      </if>
+      <if test="passwordReuseHistory != null">
+        Password_reuse_history,
+      </if>
+      <if test="passwordReuseTime != null">
+        Password_reuse_time,
+      </if>
+      <if test="passwordRequireCurrent != null">
+        Password_require_current,
+      </if>
+      <if test="sslCipher != null">
+        ssl_cipher,
+      </if>
+      <if test="x509Issuer != null">
+        x509_issuer,
+      </if>
+      <if test="x509Subject != null">
+        x509_subject,
+      </if>
+      <if test="authenticationString != null">
+        authentication_string,
+      </if>
+      <if test="userAttributes != null">
+        User_attributes,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="user != null">
+        #{user,jdbcType=CHAR},
+      </if>
+      <if test="host != null">
+        #{host,jdbcType=CHAR},
+      </if>
+      <if test="selectPriv != null">
+        #{selectPriv,jdbcType=CHAR},
+      </if>
+      <if test="insertPriv != null">
+        #{insertPriv,jdbcType=CHAR},
+      </if>
+      <if test="updatePriv != null">
+        #{updatePriv,jdbcType=CHAR},
+      </if>
+      <if test="deletePriv != null">
+        #{deletePriv,jdbcType=CHAR},
+      </if>
+      <if test="createPriv != null">
+        #{createPriv,jdbcType=CHAR},
+      </if>
+      <if test="dropPriv != null">
+        #{dropPriv,jdbcType=CHAR},
+      </if>
+      <if test="reloadPriv != null">
+        #{reloadPriv,jdbcType=CHAR},
+      </if>
+      <if test="shutdownPriv != null">
+        #{shutdownPriv,jdbcType=CHAR},
+      </if>
+      <if test="processPriv != null">
+        #{processPriv,jdbcType=CHAR},
+      </if>
+      <if test="filePriv != null">
+        #{filePriv,jdbcType=CHAR},
+      </if>
+      <if test="grantPriv != null">
+        #{grantPriv,jdbcType=CHAR},
+      </if>
+      <if test="referencesPriv != null">
+        #{referencesPriv,jdbcType=CHAR},
+      </if>
+      <if test="indexPriv != null">
+        #{indexPriv,jdbcType=CHAR},
+      </if>
+      <if test="alterPriv != null">
+        #{alterPriv,jdbcType=CHAR},
+      </if>
+      <if test="showDbPriv != null">
+        #{showDbPriv,jdbcType=CHAR},
+      </if>
+      <if test="superPriv != null">
+        #{superPriv,jdbcType=CHAR},
+      </if>
+      <if test="createTmpTablePriv != null">
+        #{createTmpTablePriv,jdbcType=CHAR},
+      </if>
+      <if test="lockTablesPriv != null">
+        #{lockTablesPriv,jdbcType=CHAR},
+      </if>
+      <if test="executePriv != null">
+        #{executePriv,jdbcType=CHAR},
+      </if>
+      <if test="replSlavePriv != null">
+        #{replSlavePriv,jdbcType=CHAR},
+      </if>
+      <if test="replClientPriv != null">
+        #{replClientPriv,jdbcType=CHAR},
+      </if>
+      <if test="createViewPriv != null">
+        #{createViewPriv,jdbcType=CHAR},
+      </if>
+      <if test="showViewPriv != null">
+        #{showViewPriv,jdbcType=CHAR},
+      </if>
+      <if test="createRoutinePriv != null">
+        #{createRoutinePriv,jdbcType=CHAR},
+      </if>
+      <if test="alterRoutinePriv != null">
+        #{alterRoutinePriv,jdbcType=CHAR},
+      </if>
+      <if test="createUserPriv != null">
+        #{createUserPriv,jdbcType=CHAR},
+      </if>
+      <if test="eventPriv != null">
+        #{eventPriv,jdbcType=CHAR},
+      </if>
+      <if test="triggerPriv != null">
+        #{triggerPriv,jdbcType=CHAR},
+      </if>
+      <if test="createTablespacePriv != null">
+        #{createTablespacePriv,jdbcType=CHAR},
+      </if>
+      <if test="sslType != null">
+        #{sslType,jdbcType=CHAR},
+      </if>
+      <if test="maxQuestions != null">
+        #{maxQuestions,jdbcType=INTEGER},
+      </if>
+      <if test="maxUpdates != null">
+        #{maxUpdates,jdbcType=INTEGER},
+      </if>
+      <if test="maxConnections != null">
+        #{maxConnections,jdbcType=INTEGER},
+      </if>
+      <if test="maxUserConnections != null">
+        #{maxUserConnections,jdbcType=INTEGER},
+      </if>
+      <if test="plugin != null">
+        #{plugin,jdbcType=CHAR},
+      </if>
+      <if test="passwordExpired != null">
+        #{passwordExpired,jdbcType=CHAR},
+      </if>
+      <if test="passwordLastChanged != null">
+        #{passwordLastChanged,jdbcType=TIMESTAMP},
+      </if>
+      <if test="passwordLifetime != null">
+        #{passwordLifetime,jdbcType=SMALLINT},
+      </if>
+      <if test="accountLocked != null">
+        #{accountLocked,jdbcType=CHAR},
+      </if>
+      <if test="createRolePriv != null">
+        #{createRolePriv,jdbcType=CHAR},
+      </if>
+      <if test="dropRolePriv != null">
+        #{dropRolePriv,jdbcType=CHAR},
+      </if>
+      <if test="passwordReuseHistory != null">
+        #{passwordReuseHistory,jdbcType=SMALLINT},
+      </if>
+      <if test="passwordReuseTime != null">
+        #{passwordReuseTime,jdbcType=SMALLINT},
+      </if>
+      <if test="passwordRequireCurrent != null">
+        #{passwordRequireCurrent,jdbcType=CHAR},
+      </if>
+      <if test="sslCipher != null">
+        #{sslCipher,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="x509Issuer != null">
+        #{x509Issuer,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="x509Subject != null">
+        #{x509Subject,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="authenticationString != null">
+        #{authenticationString,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="userAttributes != null">
+        #{userAttributes,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chao.domain.model.User">
+    update user
+    <set>
+      <if test="host != null">
+        Host = #{host,jdbcType=CHAR},
+      </if>
+      <if test="selectPriv != null">
+        Select_priv = #{selectPriv,jdbcType=CHAR},
+      </if>
+      <if test="insertPriv != null">
+        Insert_priv = #{insertPriv,jdbcType=CHAR},
+      </if>
+      <if test="updatePriv != null">
+        Update_priv = #{updatePriv,jdbcType=CHAR},
+      </if>
+      <if test="deletePriv != null">
+        Delete_priv = #{deletePriv,jdbcType=CHAR},
+      </if>
+      <if test="createPriv != null">
+        Create_priv = #{createPriv,jdbcType=CHAR},
+      </if>
+      <if test="dropPriv != null">
+        Drop_priv = #{dropPriv,jdbcType=CHAR},
+      </if>
+      <if test="reloadPriv != null">
+        Reload_priv = #{reloadPriv,jdbcType=CHAR},
+      </if>
+      <if test="shutdownPriv != null">
+        Shutdown_priv = #{shutdownPriv,jdbcType=CHAR},
+      </if>
+      <if test="processPriv != null">
+        Process_priv = #{processPriv,jdbcType=CHAR},
+      </if>
+      <if test="filePriv != null">
+        File_priv = #{filePriv,jdbcType=CHAR},
+      </if>
+      <if test="grantPriv != null">
+        Grant_priv = #{grantPriv,jdbcType=CHAR},
+      </if>
+      <if test="referencesPriv != null">
+        References_priv = #{referencesPriv,jdbcType=CHAR},
+      </if>
+      <if test="indexPriv != null">
+        Index_priv = #{indexPriv,jdbcType=CHAR},
+      </if>
+      <if test="alterPriv != null">
+        Alter_priv = #{alterPriv,jdbcType=CHAR},
+      </if>
+      <if test="showDbPriv != null">
+        Show_db_priv = #{showDbPriv,jdbcType=CHAR},
+      </if>
+      <if test="superPriv != null">
+        Super_priv = #{superPriv,jdbcType=CHAR},
+      </if>
+      <if test="createTmpTablePriv != null">
+        Create_tmp_table_priv = #{createTmpTablePriv,jdbcType=CHAR},
+      </if>
+      <if test="lockTablesPriv != null">
+        Lock_tables_priv = #{lockTablesPriv,jdbcType=CHAR},
+      </if>
+      <if test="executePriv != null">
+        Execute_priv = #{executePriv,jdbcType=CHAR},
+      </if>
+      <if test="replSlavePriv != null">
+        Repl_slave_priv = #{replSlavePriv,jdbcType=CHAR},
+      </if>
+      <if test="replClientPriv != null">
+        Repl_client_priv = #{replClientPriv,jdbcType=CHAR},
+      </if>
+      <if test="createViewPriv != null">
+        Create_view_priv = #{createViewPriv,jdbcType=CHAR},
+      </if>
+      <if test="showViewPriv != null">
+        Show_view_priv = #{showViewPriv,jdbcType=CHAR},
+      </if>
+      <if test="createRoutinePriv != null">
+        Create_routine_priv = #{createRoutinePriv,jdbcType=CHAR},
+      </if>
+      <if test="alterRoutinePriv != null">
+        Alter_routine_priv = #{alterRoutinePriv,jdbcType=CHAR},
+      </if>
+      <if test="createUserPriv != null">
+        Create_user_priv = #{createUserPriv,jdbcType=CHAR},
+      </if>
+      <if test="eventPriv != null">
+        Event_priv = #{eventPriv,jdbcType=CHAR},
+      </if>
+      <if test="triggerPriv != null">
+        Trigger_priv = #{triggerPriv,jdbcType=CHAR},
+      </if>
+      <if test="createTablespacePriv != null">
+        Create_tablespace_priv = #{createTablespacePriv,jdbcType=CHAR},
+      </if>
+      <if test="sslType != null">
+        ssl_type = #{sslType,jdbcType=CHAR},
+      </if>
+      <if test="maxQuestions != null">
+        max_questions = #{maxQuestions,jdbcType=INTEGER},
+      </if>
+      <if test="maxUpdates != null">
+        max_updates = #{maxUpdates,jdbcType=INTEGER},
+      </if>
+      <if test="maxConnections != null">
+        max_connections = #{maxConnections,jdbcType=INTEGER},
+      </if>
+      <if test="maxUserConnections != null">
+        max_user_connections = #{maxUserConnections,jdbcType=INTEGER},
+      </if>
+      <if test="plugin != null">
+        plugin = #{plugin,jdbcType=CHAR},
+      </if>
+      <if test="passwordExpired != null">
+        password_expired = #{passwordExpired,jdbcType=CHAR},
+      </if>
+      <if test="passwordLastChanged != null">
+        password_last_changed = #{passwordLastChanged,jdbcType=TIMESTAMP},
+      </if>
+      <if test="passwordLifetime != null">
+        password_lifetime = #{passwordLifetime,jdbcType=SMALLINT},
+      </if>
+      <if test="accountLocked != null">
+        account_locked = #{accountLocked,jdbcType=CHAR},
+      </if>
+      <if test="createRolePriv != null">
+        Create_role_priv = #{createRolePriv,jdbcType=CHAR},
+      </if>
+      <if test="dropRolePriv != null">
+        Drop_role_priv = #{dropRolePriv,jdbcType=CHAR},
+      </if>
+      <if test="passwordReuseHistory != null">
+        Password_reuse_history = #{passwordReuseHistory,jdbcType=SMALLINT},
+      </if>
+      <if test="passwordReuseTime != null">
+        Password_reuse_time = #{passwordReuseTime,jdbcType=SMALLINT},
+      </if>
+      <if test="passwordRequireCurrent != null">
+        Password_require_current = #{passwordRequireCurrent,jdbcType=CHAR},
+      </if>
+      <if test="sslCipher != null">
+        ssl_cipher = #{sslCipher,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="x509Issuer != null">
+        x509_issuer = #{x509Issuer,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="x509Subject != null">
+        x509_subject = #{x509Subject,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="authenticationString != null">
+        authentication_string = #{authenticationString,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="userAttributes != null">
+        User_attributes = #{userAttributes,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where User = #{user,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.chao.domain.model.User">
+    update user
+    set Host = #{host,jdbcType=CHAR},
+      Select_priv = #{selectPriv,jdbcType=CHAR},
+      Insert_priv = #{insertPriv,jdbcType=CHAR},
+      Update_priv = #{updatePriv,jdbcType=CHAR},
+      Delete_priv = #{deletePriv,jdbcType=CHAR},
+      Create_priv = #{createPriv,jdbcType=CHAR},
+      Drop_priv = #{dropPriv,jdbcType=CHAR},
+      Reload_priv = #{reloadPriv,jdbcType=CHAR},
+      Shutdown_priv = #{shutdownPriv,jdbcType=CHAR},
+      Process_priv = #{processPriv,jdbcType=CHAR},
+      File_priv = #{filePriv,jdbcType=CHAR},
+      Grant_priv = #{grantPriv,jdbcType=CHAR},
+      References_priv = #{referencesPriv,jdbcType=CHAR},
+      Index_priv = #{indexPriv,jdbcType=CHAR},
+      Alter_priv = #{alterPriv,jdbcType=CHAR},
+      Show_db_priv = #{showDbPriv,jdbcType=CHAR},
+      Super_priv = #{superPriv,jdbcType=CHAR},
+      Create_tmp_table_priv = #{createTmpTablePriv,jdbcType=CHAR},
+      Lock_tables_priv = #{lockTablesPriv,jdbcType=CHAR},
+      Execute_priv = #{executePriv,jdbcType=CHAR},
+      Repl_slave_priv = #{replSlavePriv,jdbcType=CHAR},
+      Repl_client_priv = #{replClientPriv,jdbcType=CHAR},
+      Create_view_priv = #{createViewPriv,jdbcType=CHAR},
+      Show_view_priv = #{showViewPriv,jdbcType=CHAR},
+      Create_routine_priv = #{createRoutinePriv,jdbcType=CHAR},
+      Alter_routine_priv = #{alterRoutinePriv,jdbcType=CHAR},
+      Create_user_priv = #{createUserPriv,jdbcType=CHAR},
+      Event_priv = #{eventPriv,jdbcType=CHAR},
+      Trigger_priv = #{triggerPriv,jdbcType=CHAR},
+      Create_tablespace_priv = #{createTablespacePriv,jdbcType=CHAR},
+      ssl_type = #{sslType,jdbcType=CHAR},
+      max_questions = #{maxQuestions,jdbcType=INTEGER},
+      max_updates = #{maxUpdates,jdbcType=INTEGER},
+      max_connections = #{maxConnections,jdbcType=INTEGER},
+      max_user_connections = #{maxUserConnections,jdbcType=INTEGER},
+      plugin = #{plugin,jdbcType=CHAR},
+      password_expired = #{passwordExpired,jdbcType=CHAR},
+      password_last_changed = #{passwordLastChanged,jdbcType=TIMESTAMP},
+      password_lifetime = #{passwordLifetime,jdbcType=SMALLINT},
+      account_locked = #{accountLocked,jdbcType=CHAR},
+      Create_role_priv = #{createRolePriv,jdbcType=CHAR},
+      Drop_role_priv = #{dropRolePriv,jdbcType=CHAR},
+      Password_reuse_history = #{passwordReuseHistory,jdbcType=SMALLINT},
+      Password_reuse_time = #{passwordReuseTime,jdbcType=SMALLINT},
+      Password_require_current = #{passwordRequireCurrent,jdbcType=CHAR},
+      ssl_cipher = #{sslCipher,jdbcType=LONGVARBINARY},
+      x509_issuer = #{x509Issuer,jdbcType=LONGVARBINARY},
+      x509_subject = #{x509Subject,jdbcType=LONGVARBINARY},
+      authentication_string = #{authenticationString,jdbcType=LONGVARCHAR},
+      User_attributes = #{userAttributes,jdbcType=LONGVARCHAR}
+    where User = #{user,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chao.domain.model.User">
+    update user
+    set Host = #{host,jdbcType=CHAR},
+      Select_priv = #{selectPriv,jdbcType=CHAR},
+      Insert_priv = #{insertPriv,jdbcType=CHAR},
+      Update_priv = #{updatePriv,jdbcType=CHAR},
+      Delete_priv = #{deletePriv,jdbcType=CHAR},
+      Create_priv = #{createPriv,jdbcType=CHAR},
+      Drop_priv = #{dropPriv,jdbcType=CHAR},
+      Reload_priv = #{reloadPriv,jdbcType=CHAR},
+      Shutdown_priv = #{shutdownPriv,jdbcType=CHAR},
+      Process_priv = #{processPriv,jdbcType=CHAR},
+      File_priv = #{filePriv,jdbcType=CHAR},
+      Grant_priv = #{grantPriv,jdbcType=CHAR},
+      References_priv = #{referencesPriv,jdbcType=CHAR},
+      Index_priv = #{indexPriv,jdbcType=CHAR},
+      Alter_priv = #{alterPriv,jdbcType=CHAR},
+      Show_db_priv = #{showDbPriv,jdbcType=CHAR},
+      Super_priv = #{superPriv,jdbcType=CHAR},
+      Create_tmp_table_priv = #{createTmpTablePriv,jdbcType=CHAR},
+      Lock_tables_priv = #{lockTablesPriv,jdbcType=CHAR},
+      Execute_priv = #{executePriv,jdbcType=CHAR},
+      Repl_slave_priv = #{replSlavePriv,jdbcType=CHAR},
+      Repl_client_priv = #{replClientPriv,jdbcType=CHAR},
+      Create_view_priv = #{createViewPriv,jdbcType=CHAR},
+      Show_view_priv = #{showViewPriv,jdbcType=CHAR},
+      Create_routine_priv = #{createRoutinePriv,jdbcType=CHAR},
+      Alter_routine_priv = #{alterRoutinePriv,jdbcType=CHAR},
+      Create_user_priv = #{createUserPriv,jdbcType=CHAR},
+      Event_priv = #{eventPriv,jdbcType=CHAR},
+      Trigger_priv = #{triggerPriv,jdbcType=CHAR},
+      Create_tablespace_priv = #{createTablespacePriv,jdbcType=CHAR},
+      ssl_type = #{sslType,jdbcType=CHAR},
+      max_questions = #{maxQuestions,jdbcType=INTEGER},
+      max_updates = #{maxUpdates,jdbcType=INTEGER},
+      max_connections = #{maxConnections,jdbcType=INTEGER},
+      max_user_connections = #{maxUserConnections,jdbcType=INTEGER},
+      plugin = #{plugin,jdbcType=CHAR},
+      password_expired = #{passwordExpired,jdbcType=CHAR},
+      password_last_changed = #{passwordLastChanged,jdbcType=TIMESTAMP},
+      password_lifetime = #{passwordLifetime,jdbcType=SMALLINT},
+      account_locked = #{accountLocked,jdbcType=CHAR},
+      Create_role_priv = #{createRolePriv,jdbcType=CHAR},
+      Drop_role_priv = #{dropRolePriv,jdbcType=CHAR},
+      Password_reuse_history = #{passwordReuseHistory,jdbcType=SMALLINT},
+      Password_reuse_time = #{passwordReuseTime,jdbcType=SMALLINT},
+      Password_require_current = #{passwordRequireCurrent,jdbcType=CHAR}
+    where User = #{user,jdbcType=CHAR}
+  </update>
+  <sql id="Base_Column_List">
+    id, username, nick_name, avatar, password, salt, email, mobile, status, dep_id, create_by, 
+    create_time, last_update_by, last_update_time, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
 </mapper>

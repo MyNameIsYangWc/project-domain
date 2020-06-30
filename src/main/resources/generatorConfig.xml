@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+  <classPathEntry location="E:\\Repository\\mysql\\mysql-connector-java\\8.0.19\\mysql-connector-java-8.0.19.jar"/>
+
+  <context id="mysqlTables" targetRuntime="MyBatis3" defaultModelType="flat">
+    <!-- 为了防止生成的代码中有很多注释，比较难看，加入下面的配置控制  -->
+ <!-- &lt;!&ndash; 是否去除自动生成的注释 true：是 ： false:否 &ndash;&gt; -->
+  <commentGenerator >
+           <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
+  </commentGenerator>
+     <!-- 注释控制完毕 -->
+
+ <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver" connectionURL="jdbc:mysql://129.211.113.218:3306/project"
+      userId="root" password="Pass12345"/>
+
+    <!-- 指定生成的类型为java类型，避免数据库中number等类型字段 -->
+    <javaTypeResolver>
+      <property name="forceBigDecimals" value="false"/>
+    </javaTypeResolver>
+
+    <!-- 生成model模型，对应的包，存放位置可以指定具体的路径,如/ProjectName/src，也可以使用MyWebservice/src/main/java来自动生成 -->
+    <javaModelGenerator targetPackage="com.chao.domain.model" targetProject="src/main/java">
+      <property name="enableSubPackages" value="true"/>
+    </javaModelGenerator>
+
+    <!--对应的xml mapper文件  -->
+    <sqlMapGenerator targetPackage="mappers" targetProject="src/main/resources">
+      <property name="enableSubPackages" value="true"/>
+    </sqlMapGenerator>
+
+    <!-- 对应的dao接口类 -->
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.chao.domain.dao" targetProject="src/main/java">
+      <property name="enableSubPackages" value="true"/>
+    </javaClientGenerator>
+     <!-- tables 配置好表名和对应的实体对象名 -->
+     <table tableName="user" domainObjectName="User"
+    		enableCountByExample="false" enableUpdateByExample="false"
+    		enableSelectByExample="false" enableDeleteByExample="false"
+    		selectByExampleQueryId="false">
+    		<property name="useActualColumnNames" value="false"/>
+    </table>
+      <table tableName="attachment" domainObjectName="Attachment"
+             enableCountByExample="false" enableUpdateByExample="false"
+             enableSelectByExample="false" enableDeleteByExample="false"
+             selectByExampleQueryId="false">
+          <property name="useActualColumnNames" value="false"/>
+      </table>
+  </context>
+</generatorConfiguration>
+<!--mybatis-generator:generate -e-->

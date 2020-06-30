@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,7 +20,6 @@ public class LoginController {
 
     @Autowired
     private UserService uerService;
-
 
     /**
      * 用户登录
@@ -35,7 +33,6 @@ public class LoginController {
 
         logger.info("###userLogin参数为：###"+user);
         Result result = uerService.userLogin(user);
-
         return result;
     }
 

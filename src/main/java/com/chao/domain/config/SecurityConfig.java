@@ -110,10 +110,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new IgnoreUrlsConfig();
     }
 
-//    @Bean
-//    public JwtTokenUtil jwtTokenUtil() {
-//        return new JwtTokenUtil();
-//    }
+    /**
+     * 注入UserDetailsService,修改默认sql
+     * @author 杨文超
+     * @date 2020-06-30
+     */
+    @Bean("userDetailsService")
+    public UserDetailsService userDetails() {
+        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
+        jdbcUserDetailsManager.setUsersByUsernameQuery("select username,password,enabled from user where username = ? and del_flag=0");
+        return jdbcUserDetailsManager;
+    }
 
     @ConditionalOnBean(name = "dynamicSecurityService")
     @Bean

@@ -6,6 +6,8 @@ import com.chao.domain.service.AttachmentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "AttachmentController",description = "附件表操作")
 @RequestMapping("/attachment")
 public class AttachmentController {
+
+    private Logger logger= LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     private AttachmentService attachmentService;
@@ -39,7 +43,7 @@ public class AttachmentController {
     })
     @PostMapping("/upload")
     public Result upload(@RequestBody Attachment attachment){
-
+        logger.info("upload"+attachment.getUsername());
         return attachmentService.upload(attachment);
     }
 }

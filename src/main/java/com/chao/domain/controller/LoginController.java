@@ -51,6 +51,7 @@ public class LoginController {
     @GetMapping("/userlogout")
     public Result logout(@RequestParam String username){
 
+        logger.info("###userlogout参数为：###"+username);
         Result result = uerService.logout(username);
         return result;
     }

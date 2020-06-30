@@ -10,12 +10,11 @@ import com.chao.domain.token.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -28,14 +27,8 @@ public class UserServiceImpl implements UserService {
     private  JwtTokenUtil jwtTokenUtil;
     @Autowired
     private RedisTemplate redisTemplate;
-
-    private JdbcDaoImpl jdbcDao;
-
     @Autowired
-    public UserServiceImpl(DataSource dataSource) {
-        jdbcDao = new JdbcDaoImpl();
-        jdbcDao.setDataSource(dataSource);
-    }
+    private UserDetailsService userDetailsService;
 
     /**
      * 登录
@@ -45,10 +38,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result userLogin(User user) {
 
-        //替换默认查询语句
-        jdbcDao.setUsersByUsernameQuery("select username,password,enabled from user where username = ? and del_flag=0");
         //根据账号获取用户信息
-        UserDetails userDetails = jdbcDao.loadUserByUsername(user.getUsername());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         //密码校验
         if(!SecurityUtils.verifyPwd(user.getPassword(),userDetails)){
             return new Result(ResultCode.businErrorCode.getCode(),"密码不正确");

@@ -2,6 +2,7 @@ package com.chao.domain.service.impl;
 
 import com.chao.domain.common.SecurityUtils;
 import com.chao.domain.dao.AttachmentMapper;
+import com.chao.domain.model.Attachment;
 import com.chao.domain.model.User;
 import com.chao.domain.result.Result;
 import com.chao.domain.result.ResultCode;
@@ -53,8 +54,9 @@ public class UserServiceImpl implements UserService {
         user.setAuthorities(userDetails.getAuthorities());
         user.setEnabled(userDetails.isEnabled());
         //查询用户头像fileId
-        String fileId=attachmentMapper.selectUserImage(user.getUsername());
-        user.setFileId(fileId);
+        Attachment attachment = attachmentMapper.selectUserImage(user.getUsername());
+        attachmentMapper.selectUserImage(user.getUsername());
+        user.setFileId(attachment.getFileId());
         return new Result(ResultCode.successCode.getCode(),ResultCode.successCode.getMsg(),user);
     }
 

@@ -7,5 +7,7 @@ package com.chao.domain.common;
  */
 public interface Constants {
 
-   int EXP=60*60;//token有效时间
+   //附件表
+   String FILE_TYPE_CD_ONE="1";
+   String FILE_TYPE_NAME_ONE="用户头像";
 }

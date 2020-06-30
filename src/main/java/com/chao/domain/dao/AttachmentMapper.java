@@ -18,5 +18,5 @@ public interface AttachmentMapper {
 
     int updateByPrimaryKey(Attachment record);
 
-    String selectUserImage(@Param("username") String username);
+    Attachment selectUserImage(@Param("username") String username);
 }

@@ -154,7 +154,7 @@
     </dependencies>
 
     <build>
-        <finalName>zsxt</finalName>
+        <finalName>project-permission</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

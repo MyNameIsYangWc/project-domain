@@ -1,11 +1,11 @@
 package com.chao.domain.dao;
 
 import com.chao.domain.model.User;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UserMapper {
     int deleteByPrimaryKey(String user);
-
-    int insert(User record);
 
     int insertSelective(User record);
 

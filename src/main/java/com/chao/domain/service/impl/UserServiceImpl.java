@@ -2,7 +2,6 @@ package com.chao.domain.service.impl;
 
 import com.chao.domain.common.SecurityUtils;
 import com.chao.domain.dao.AttachmentMapper;
-import com.chao.domain.dao.UserMapper;
 import com.chao.domain.model.User;
 import com.chao.domain.result.Result;
 import com.chao.domain.result.ResultCode;
@@ -23,8 +22,6 @@ import java.util.concurrent.TimeUnit;
 @Transactional(propagation = Propagation.REQUIRED)
 public class UserServiceImpl implements UserService {
 
-    @Autowired(required = false)
-    private UserMapper userMapper;
     @Autowired
     private AttachmentMapper attachmentMapper;
     @Autowired

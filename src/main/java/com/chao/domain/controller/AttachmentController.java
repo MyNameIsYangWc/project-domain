@@ -30,7 +30,7 @@ public class AttachmentController {
     private AttachmentService attachmentService;
 
     /**
-     * 文件上传
+     * 用户头像上传
      * @param attachment
      * @author 杨文超
      * @date 2020-06-30

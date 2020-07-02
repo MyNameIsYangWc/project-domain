@@ -4,18 +4,25 @@ import com.chao.domain.result.Result;
 import com.chao.domain.result.ResultCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpInputMessage;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdvice;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
 
 /**
- * 异常统一处理类
+ * aop处理类
  */
 @RestControllerAdvice
-public class DomainExceptionHandler {
+public class DomainExceptionHandler implements RequestBodyAdvice {
 
     private Logger logger= LoggerFactory.getLogger(DomainExceptionHandler.class);
 
@@ -33,17 +40,47 @@ public class DomainExceptionHandler {
      */
     @ModelAttribute
     public void addAttributes(Model model) {
-        model.addAttribute("Data", model);
+        System.out.println(6);
+//        model.addAttribute("Data", model);
     }
 
     /**
      * 全局异常捕捉处理
      * @param e
      * @return
+     * @author 杨文超
+     * @date 2020-06-27
      */
     @ExceptionHandler(Exception.class)
     public Result errorHandler(Exception e) {
         logger.error("系统异常，错误信息：",e);
         return new Result(ResultCode.SystemErrorCode.getCode(),ResultCode.SystemErrorCode.getMsg(),e.getMessage());
+    }
+
+    @Override
+    public boolean supports(MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass) {
+        System.out.println(methodParameter);
+        System.out.println(type);
+        System.out.println(aClass);
+        System.out.println(1);
+        return false;
+    }
+
+    @Override
+    public HttpInputMessage beforeBodyRead(HttpInputMessage httpInputMessage, MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass) throws IOException {
+        System.out.println(2);
+        return null;
+    }
+
+    @Override
+    public Object afterBodyRead(Object o, HttpInputMessage httpInputMessage, MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass) {
+        System.out.println(3);
+        return null;
+    }
+
+    @Override
+    public Object handleEmptyBody(Object o, HttpInputMessage httpInputMessage, MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass) {
+        System.out.println(4);
+        return null;
     }
 }

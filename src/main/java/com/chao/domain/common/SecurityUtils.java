@@ -30,13 +30,10 @@ public class SecurityUtils {
 
     /**
      * 密码校验
-     * @param pwd
-     * @param userDetails
      * @return
      */
-    public static boolean verifyPwd(String pwd, UserDetails userDetails){
-        String password = userDetails.getPassword();
-        if(password.equals(pwd)){
+    public static boolean verifyPwd(String pwd1, String pwd2){
+        if(pwd1.equals(pwd2)){
             return true;
         }
         return false;

@@ -1,7 +1,8 @@
 package com.chao.domain.service.impl;
 
-import com.chao.domain.common.SecurityUtils;
+import com.alibaba.fastjson.JSONObject;
 import com.chao.domain.dao.AttachmentMapper;
+import com.chao.domain.dao.UserMapper;
 import com.chao.domain.model.Attachment;
 import com.chao.domain.model.User;
 import com.chao.domain.result.Result;
@@ -18,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.chao.domain.common.SecurityUtils.pwdSecurity;
+import static com.chao.domain.common.SecurityUtils.verifyPwd;
+
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
 public class UserServiceImpl implements UserService {
@@ -30,6 +34,8 @@ public class UserServiceImpl implements UserService {
     private RedisTemplate redisTemplate;
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 登录
@@ -42,7 +48,7 @@ public class UserServiceImpl implements UserService {
         //根据账号获取用户信息
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         //密码校验
-        if(!SecurityUtils.verifyPwd(user.getPassword(),userDetails)){
+        if(!verifyPwd(user.getPassword(),userDetails.getPassword())){
             return new Result(ResultCode.businErrorCode.getCode(),"密码不正确");
         }
         String token= jwtTokenUtil.generateToken(userDetails);//生成token
@@ -75,6 +81,31 @@ public class UserServiceImpl implements UserService {
         }
         return new Result(ResultCode.businErrorCode.getCode(),"用户已失效/用户未登录");
 
+    }
+
+    /**
+     * 重置密码
+     * user：账号，旧密码，新密码
+     * @author 杨文超
+     * @date 2020-07-01
+     */
+    @Override
+    public Result resetPwd(JSONObject user) {
+
+        //根据账号获取用户信息
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getString("username"));
+        //密码校验
+        if(!verifyPwd(user.getString("oldPassword"),userDetails.getPassword())){
+            return new Result(ResultCode.businErrorCode.getCode(),"密码不正确");
+        }
+        //校验新老密码是否一致
+        if(verifyPwd(user.getString("oldPassword"),user.getString("newPassword"))){
+            return new Result(ResultCode.businErrorCode.getCode(),"新旧密码不能重复使用");
+        }
+       //重置密码
+        String newPassword = pwdSecurity(user.getString("newPassword"));
+        userMapper.updatePWD(userDetails.getUsername(),newPassword);
+        return new Result(ResultCode.successCode.getCode(),ResultCode.successCode.getMsg(),user);
     }
 
     /**

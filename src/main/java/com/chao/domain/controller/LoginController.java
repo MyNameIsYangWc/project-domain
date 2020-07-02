@@ -12,6 +12,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 登录处理
+ * @author 杨文超
+ * @date 2020-07-02
+ */
 @RestController
 @Api(value = "LoginController",description = "登录")
 public class LoginController {
@@ -23,6 +28,8 @@ public class LoginController {
 
     /**
      * 用户登录
+     * @author 杨文超
+     * @date 2020-06-27
      */
     @ApiOperation(value = "用户登录",notes = "用户登录")
     @ApiImplicitParams({

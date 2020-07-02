@@ -8,4 +8,4 @@ spring:
       # 对应{application}部分
       name: project-domain
       # 对应{profile}部分
-      profile: test
+      profile: dev

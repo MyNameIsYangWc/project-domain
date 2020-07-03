@@ -1,4 +1,4 @@
-package com.chao.domain.component;
+package com.chao.domain.oauth2Config;
 
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.stereotype.Component;

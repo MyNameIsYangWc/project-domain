@@ -1,4 +1,4 @@
-package com.chao.domain.component;
+package com.chao.domain.oauth2Config;
 
 //import cn.hutool.core.util.URLUtil;
 import cn.hutool.core.util.URLUtil;

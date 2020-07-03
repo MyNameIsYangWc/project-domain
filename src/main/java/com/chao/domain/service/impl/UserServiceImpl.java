@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.chao.domain.common.SecurityUtils.pwdSecurity;
-import static com.chao.domain.common.SecurityUtils.verifyPwd;
+import static com.chao.domain.utils.SecurityUtils.pwdSecurity;
+import static com.chao.domain.utils.SecurityUtils.verifyPwd;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
@@ -92,20 +92,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result resetPwd(JSONObject user) {
 
+        String username = user.getString("username");
+        String oldPwdSecurity = pwdSecurity(user.getString("oldPassword"));//老密码加密
+        String newPwdSecurity = pwdSecurity(user.getString("newPassword")); //新密码加密
+
         //根据账号获取用户信息
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getString("username"));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         //密码校验
-        if(!verifyPwd(user.getString("oldPassword"),userDetails.getPassword())){
+        if(!verifyPwd(oldPwdSecurity,userDetails.getPassword())){
             return new Result(ResultCode.businErrorCode.getCode(),"密码不正确");
         }
         //校验新老密码是否一致
-        if(verifyPwd(user.getString("oldPassword"),user.getString("newPassword"))){
+        if(verifyPwd(oldPwdSecurity,newPwdSecurity)){
             return new Result(ResultCode.businErrorCode.getCode(),"新旧密码不能重复使用");
         }
        //重置密码
-        String newPassword = pwdSecurity(user.getString("newPassword"));
-        userMapper.updatePWD(userDetails.getUsername(),newPassword);
-        return new Result(ResultCode.successCode.getCode(),ResultCode.successCode.getMsg(),user);
+        userMapper.updatePWD(username,newPwdSecurity);
+        return new Result(ResultCode.successCode.getCode(),ResultCode.successCode.getMsg());
     }
 
     /**

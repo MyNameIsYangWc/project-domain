@@ -1,4 +1,4 @@
-package com.chao.domain.component;
+package com.chao.domain.oauth2Config;
 
 import com.alibaba.fastjson.JSONObject;
 import com.chao.domain.result.Result;

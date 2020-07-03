@@ -588,7 +588,7 @@
   <update id="updatePWD">
     UPDATE
         `user`
-    SET `password`=#{password},
+    SET `password`=#{newPassword},
     last_update_time=NOW()
     WHERE
         username = #{username}

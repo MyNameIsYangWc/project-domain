@@ -1,6 +1,6 @@
 package com.chao.domain.model;
 
-import com.chao.domain.common.SecurityUtils;
+import com.chao.domain.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package com.chao.domain.component;
+package com.chao.domain.oauth2Config;
 
 import cn.hutool.core.collection.CollUtil;
 import org.springframework.security.access.AccessDecisionManager;

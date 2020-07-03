@@ -1,6 +1,7 @@
-package com.chao.domain.config;
+package com.chao.domain.oauth2Config;
 
-import com.chao.domain.component.*;
+import com.chao.domain.config.IgnoreUrlsConfig;
+import com.chao.domain.oauth2Config.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;

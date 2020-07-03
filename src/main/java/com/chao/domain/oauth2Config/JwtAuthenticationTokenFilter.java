@@ -1,4 +1,4 @@
-package com.chao.domain.component;
+package com.chao.domain.oauth2Config;
 
 import com.chao.domain.token.JwtTokenUtil;
 import org.slf4j.Logger;

@@ -22,7 +22,7 @@ import java.lang.reflect.Type;
  * aop处理类
  */
 @RestControllerAdvice
-public class DomainExceptionHandler implements RequestBodyAdvice {
+public class DomainExceptionHandler{
 
     private Logger logger= LoggerFactory.getLogger(DomainExceptionHandler.class);
 
@@ -40,7 +40,6 @@ public class DomainExceptionHandler implements RequestBodyAdvice {
      */
     @ModelAttribute
     public void addAttributes(Model model) {
-        System.out.println(6);
 //        model.addAttribute("Data", model);
     }
 
@@ -55,32 +54,5 @@ public class DomainExceptionHandler implements RequestBodyAdvice {
     public Result errorHandler(Exception e) {
         logger.error("系统异常，错误信息：",e);
         return new Result(ResultCode.SystemErrorCode.getCode(),ResultCode.SystemErrorCode.getMsg(),e.getMessage());
-    }
-
-    @Override
-    public boolean supports(MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass) {
-        System.out.println(methodParameter);
-        System.out.println(type);
-        System.out.println(aClass);
-        System.out.println(1);
-        return false;
-    }
-
-    @Override
-    public HttpInputMessage beforeBodyRead(HttpInputMessage httpInputMessage, MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass) throws IOException {
-        System.out.println(2);
-        return null;
-    }
-
-    @Override
-    public Object afterBodyRead(Object o, HttpInputMessage httpInputMessage, MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass) {
-        System.out.println(3);
-        return null;
-    }
-
-    @Override
-    public Object handleEmptyBody(Object o, HttpInputMessage httpInputMessage, MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass) {
-        System.out.println(4);
-        return null;
     }
 }

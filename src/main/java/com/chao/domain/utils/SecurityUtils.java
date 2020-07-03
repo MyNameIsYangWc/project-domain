@@ -1,6 +1,4 @@
-package com.chao.domain.common;
-
-import org.springframework.security.core.userdetails.UserDetails;
+package com.chao.domain.utils;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

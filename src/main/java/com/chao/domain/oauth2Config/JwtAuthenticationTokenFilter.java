@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -18,6 +19,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * JWT登录授权过滤器
@@ -39,7 +43,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private String tokenHeader;
     @Value("${jwt.tokenHead}")
     private String tokenHead;
-
+    @Autowired
+    private ConcurrentHashMap<String,UserDetails> userDetailMap;//存储登录用户 UserDetails 信息,token失效,此处也需删除
 
     /**
      * token校验
@@ -53,18 +58,22 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,HttpServletResponse response,FilterChain chain) throws ServletException, IOException {
         String authHeader = request.getHeader(this.tokenHeader);
         if (authHeader != null && authHeader.startsWith(this.tokenHead)) {
-
-            String authToken = authHeader.substring(this.tokenHead.length());// The part after "Bearer "
+            // The part after "Bearer "
+            String authToken = authHeader.substring(this.tokenHead.length());
             String username = jwtTokenUtil.getUserNameFromToken(authToken);
-
+            //校验token
             if (username != null && redisTemplate.opsForValue().get(username) != null
-                    && jwtTokenUtil.compareToken(authToken.trim(),((String) redisTemplate.opsForValue().get(username)).trim())) {//校验token是否一致
-                //从数据库查询用户信息,保存到redis
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                    && jwtTokenUtil.compareToken(authToken.trim(),((String) redisTemplate.opsForValue().get(username)).trim())) {
+               //根据账号获取userDetails信息
+                UserDetails userDetails = userDetailMap.get(username);
+                if(userDetails == null){
+                    //内存没有从数据库初始化
+                    userDetails  = userDetailsService.loadUserByUsername(username);
+                    userDetailMap.put(username,userDetails);
+                }
                 if (jwtTokenUtil.validateToken(authToken, userDetails)) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    logger.info("authenticated user:{}", username);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }

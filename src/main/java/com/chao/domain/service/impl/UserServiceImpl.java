@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import static com.chao.domain.utils.SecurityUtils.pwdSecurity;
@@ -36,6 +37,8 @@ public class UserServiceImpl implements UserService {
     private UserDetailsService userDetailsService;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private ConcurrentHashMap<String,UserDetails> userDetailMap;
 
     /**
      * 登录
@@ -76,11 +79,11 @@ public class UserServiceImpl implements UserService {
     public Result logout(String username) {
 
         Boolean isLogout = redisTemplate.delete(username);
+        userDetailMap.remove(username);
         if(isLogout){
             return new Result(ResultCode.successCode.getCode(),ResultCode.successCode.getMsg());
         }
         return new Result(ResultCode.businErrorCode.getCode(),"用户已失效/用户未登录");
-
     }
 
     /**
@@ -108,6 +111,9 @@ public class UserServiceImpl implements UserService {
         }
        //重置密码
         userMapper.updatePWD(username,newPwdSecurity);
+        //删除token重新登录
+        redisTemplate.delete(username);
+        userDetailMap.remove(username);
         return new Result(ResultCode.successCode.getCode(),ResultCode.successCode.getMsg());
     }
 

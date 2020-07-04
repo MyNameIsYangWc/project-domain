@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -73,12 +75,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
+    /**
+     * 注入UserDetailsService,修改默认sql
+     * @author 杨文超
+     * @date 2020-06-30
+     */
+    @Bean("userDetailsService")
+    public UserDetailsService userDetails() {
+        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
+        jdbcUserDetailsManager.setUsersByUsernameQuery("select username,password,enabled from user where username = ? and del_flag=0");
+        return jdbcUserDetailsManager;
+    }
+
+    /**
+     * 初始化一个map存储用户信息用于authentic认证
+     * @author 杨文超
+     * @date 2020-07-04
+     */
+    @Bean("concurrentHashMap")
+    public ConcurrentHashMap<String,UserDetails > userDetails1() {
+        return new ConcurrentHashMap<String,UserDetails>();
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService())
                 .passwordEncoder(passwordEncoder());
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -88,12 +111,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
         return new JwtAuthenticationTokenFilter();
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
     }
 
     @Bean
@@ -107,20 +124,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public IgnoreUrlsConfig ignoreUrlsConfig() {
-        return new IgnoreUrlsConfig();
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
-    /**
-     * 注入UserDetailsService,修改默认sql
-     * @author 杨文超
-     * @date 2020-06-30
-     */
-    @Bean("userDetailsService")
-    public UserDetailsService userDetails() {
-        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
-        jdbcUserDetailsManager.setUsersByUsernameQuery("select username,password,enabled from user where username = ? and del_flag=0");
-        return jdbcUserDetailsManager;
+    @Bean
+    public IgnoreUrlsConfig ignoreUrlsConfig() {
+        return new IgnoreUrlsConfig();
     }
 
     @ConditionalOnBean(name = "dynamicSecurityService")

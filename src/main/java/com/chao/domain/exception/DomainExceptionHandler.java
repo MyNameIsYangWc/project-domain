@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 
 /**
- * aop处理类
+ * 全局异常捕捉处理
+ * @author 杨文超
+ * @date 2020-06-27
  */
 @RestControllerAdvice
 public class DomainExceptionHandler{

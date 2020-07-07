@@ -50,30 +50,35 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
      * @param chain
      * @throws ServletException
      * @throws IOException
+     * @auther 杨文超
+     * @date 2020/07/07
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request,HttpServletResponse response,FilterChain chain) throws ServletException, IOException {
-        String authHeader = request.getHeader(this.tokenHeader);
-        if (authHeader != null && authHeader.startsWith(this.tokenHead)) {
-            // The part after "Bearer "
+        String authHeader = request.getHeader(this.tokenHeader);//获取请求头中的Token
+        Boolean flag=false; //执行流程校验标记
+        String username=null;//账号
+
+        if (authHeader != null && authHeader.startsWith(this.tokenHead)) { //token 格式校验
+            flag=true;
+        }
+        if(flag){
+            //通过token获取用户名
             String authToken = authHeader.substring(this.tokenHead.length());
-            String username = jwtTokenUtil.getUserNameFromToken(authToken);
-            //校验token
-            if (username != null && redisTemplate.opsForValue().get(username) != null
-                    && jwtTokenUtil.compareToken(authToken.trim(),((String) redisTemplate.opsForValue().get(username)).trim())) {
-               //根据账号获取userDetails信息
-                UserDetails userDetails = userDetailMap.get(username);
-                if(userDetails == null){
-                    //内存没有从数据库初始化
-                    userDetails  = userDetailsService.loadUserByUsername(username);
-                    userDetailMap.put(username,userDetails);
-                }
-                if (jwtTokenUtil.validateToken(authToken, userDetails)) {
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
+            username = jwtTokenUtil.getUserNameFromToken(authToken);
+            flag=username==null?false:true;
+            if (flag) {
+                String token = redisTemplate.opsForValue().get(username).toString();//根据用户名获取token
+                flag=token==null?false:jwtTokenUtil.compareToken(authToken.trim(),token.trim());//token校验
             }
+        }
+        if(flag){
+            UserDetails userDetails = userDetailMap.get(username);//根据账号从内存获取userDetails信息
+            userDetails= userDetails!=null ? userDetails : userDetailsService.loadUserByUsername(username);//数据库查询
+            //认证放行
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         chain.doFilter(request, response);
     }

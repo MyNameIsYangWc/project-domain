@@ -62,22 +62,4 @@ public class LoginController {
         Result result = uerService.logout(username);
         return result;
     }
-
-    /**
-     * 新增用户
-     */
-    @ApiOperation(value = "新增用户",notes = "新增用户")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "user",value = "用户信息",required = true,dataType = "User",paramType = "body"),
-    })
-    @PostMapping("/insertUser")
-    public Result insertUser(@RequestBody User user){
-
-        logger.info("###insertUser参数为：###"+user);
-        Result result = uerService.insertUser(user);
-
-        return result;
-    }
-
-
 }

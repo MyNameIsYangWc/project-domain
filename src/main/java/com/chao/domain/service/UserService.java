@@ -6,7 +6,7 @@ import com.chao.domain.result.Result;
 
 public interface UserService {
 
-    Result insertUser(User user);
+    Result registerUser(User user);
 
     Result userLogin(User user);
 

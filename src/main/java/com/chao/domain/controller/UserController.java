@@ -1,6 +1,7 @@
 package com.chao.domain.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.chao.domain.model.User;
 import com.chao.domain.result.Result;
 import com.chao.domain.result.ResultCode;
 import com.chao.domain.service.UserService;
@@ -47,7 +48,22 @@ public class UserController {
                 StringUtils.isBlank(user.getString("oldPassword")) || StringUtils.isBlank(user.getString("newPassword"))){
             return new Result(ResultCode.businErrorCode.getCode(),"参数错误");
         }
-        Result result = uerService.resetPwd(user);
-        return result;
+        return uerService.resetPwd(user);
     }
+
+    /**
+     * 用户注册
+     * @author 杨文超
+     * @date 2020-07-07
+     */
+    @ApiOperation(value = "用户注册",notes = "用户注册")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "user",value = "用户信息",required = true,dataType = "User",paramType = "body"),
+    })
+    @PostMapping("/register")
+    public Result registerUser(@RequestBody User user){
+
+        return uerService.registerUser(user);
+    }
+
 }

@@ -118,28 +118,20 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 查询用户信息
-     */
-    public Result selectUserInformation(User user) {
-//
-//        User user1= userMapper.selectUser(user);
-//        if(user1 !=null){
-//            return new Result(ResultCode.successCode.getCode(),"成功");
-//        }
-
-        return new Result(ResultCode.businErrorCode.getCode(),"查询用户信息失败");
-    }
-
-    /**
      * 注册账号
      * @param user
+     * @author 杨文超
+     * @date 2020-07-07
      */
     @Override
-    public Result insertUser(User user) {
-
-        return new Result(ResultCode.businErrorCode.getCode(),"账号存在");
+    public Result registerUser(User user) {
+        //根据账号获取用户信息
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        if(userDetails != null){
+            return new Result(ResultCode.businErrorCode.getCode(),"账号存在");
+        }
+        userMapper.insertSelective(user);
+        return new Result(ResultCode.successCode.getCode(),"注册成功");
     }
-
-
 
 }

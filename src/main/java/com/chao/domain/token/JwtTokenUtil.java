@@ -33,12 +33,22 @@ public class JwtTokenUtil {
     private static final String CLAIM_KEY_CREATED = "created";
     @Value("${jwt.secret}")
     private String secret;
-    private final Long expiration=60*60L;
+    private final Long expiration=60*10L;//10分钟
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
     /**
-     * 根据负责生成JWT的token
+     * 根据用户信息生成token
+     */
+    public String generateToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
+        claims.put(CLAIM_KEY_CREATED, new Date());
+        return generateToken(claims);
+    }
+
+    /**
+     * 根据负载生成JWT的token
      */
     private String generateToken(Map<String, Object> claims) {
         return Jwts.builder()
@@ -86,17 +96,6 @@ public class JwtTokenUtil {
     }
 
     /**
-     * 验证token是否还有效
-     *
-     * @param token       客户端传入的token
-     * @param userDetails 从数据库中查询出来的用户信息
-     */
-    public boolean validateToken(String token, UserDetails userDetails) {
-        String username = getUserNameFromToken(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
-    }
-
-    /**
      * 判断token是否已经失效
      */
     public boolean isTokenExpired(String token) {
@@ -113,16 +112,6 @@ public class JwtTokenUtil {
     }
 
     /**
-     * 根据用户信息生成token
-     */
-    public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
-        claims.put(CLAIM_KEY_CREATED, new Date());
-        return generateToken(claims);
-    }
-
-    /**
      * token对比
      */
     public boolean compareToken(String authToken,String redisToken) {
@@ -130,34 +119,19 @@ public class JwtTokenUtil {
     }
 
     /**
-     * 当原来的token没过期时是可以刷新的
-     *
-     * @param oldToken 带tokenHead的token
+     * 刷新token
      */
     public String refreshHeadToken(String oldToken) {
         if(StrUtil.isEmpty(oldToken)){
             return null;
         }
-        String token = oldToken.substring(tokenHead.length());
-        if(StrUtil.isEmpty(token)){
-            return null;
-        }
         //token校验不通过
-        Claims claims = getClaimsFromToken(token);
+        Claims claims = getClaimsFromToken(oldToken);
         if(claims==null){
             return null;
         }
-        //如果token已经过期，不支持刷新
-        if(isTokenExpired(token)){
-            return null;
-        }
-        //如果token在30分钟之内刚刷新过，返回原token
-        if(tokenRefreshJustBefore(token,30*60)){
-            return token;
-        }else{
-            claims.put(CLAIM_KEY_CREATED, new Date());
-            return generateToken(claims);
-        }
+        claims.put(CLAIM_KEY_CREATED, new Date());
+        return generateToken(claims);
     }
 
     /**

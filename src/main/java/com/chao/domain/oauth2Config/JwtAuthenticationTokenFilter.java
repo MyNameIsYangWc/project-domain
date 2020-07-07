@@ -1,6 +1,8 @@
 package com.chao.domain.oauth2Config;
 
+import com.chao.domain.thread.MyThreadPoolExecutor;
 import com.chao.domain.token.JwtTokenUtil;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * JWT登录授权过滤器
@@ -42,6 +45,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private String tokenHead;
     @Autowired
     private ConcurrentHashMap<String,UserDetails> userDetailMap;//存储登录用户 UserDetails 信息,token失效,此处也需删除
+    ThreadLocal<Boolean> threadLocal=new ThreadLocal<>();
 
     /**
      * token校验
@@ -57,6 +61,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,HttpServletResponse response,FilterChain chain) throws ServletException, IOException {
         String authHeader = request.getHeader(this.tokenHeader);//获取请求头中的Token
         Boolean flag=false; //执行流程校验标记
+        threadLocal.set(false); //认证token失效标记
         String username=null;//账号
 
         if (authHeader != null && authHeader.startsWith(this.tokenHead)) { //token 格式校验
@@ -71,6 +76,19 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 String token = redisTemplate.opsForValue().get(username).toString();//根据用户名获取token
                 flag=token==null?false:jwtTokenUtil.compareToken(authToken.trim(),token.trim());//token校验
             }
+            if(flag){//判断token是否失效
+                Boolean tokenExp = jwtTokenUtil.isTokenExpired(authToken.trim());
+                threadLocal.set(tokenExp);
+                if(tokenExp){
+                    MyThreadPoolExecutor.getThreadPoolExecutor().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            //失效逻辑
+                            threadLocal.set(false);
+                        }
+                    });
+                }
+            }
         }
         if(flag){
             UserDetails userDetails = userDetailMap.get(username);//根据账号从内存获取userDetails信息
@@ -81,5 +99,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         chain.doFilter(request, response);
+        System.out.println("90ww");
+        Boolean aBoolean = threadLocal.get();
+        System.out.println(aBoolean);
+        while (threadLocal.get()){
+            System.out.println("901ww");
+        }
+        System.out.println("902ww");
     }
 }

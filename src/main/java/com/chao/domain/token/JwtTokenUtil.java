@@ -99,7 +99,7 @@ public class JwtTokenUtil {
     /**
      * 判断token是否已经失效
      */
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         Date expiredDate = getExpiredDateFromToken(token);
         return expiredDate.before(new Date());
     }

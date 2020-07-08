@@ -1,6 +1,7 @@
 package com.chao.domain.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.chao.domain.common.Constants;
 import com.chao.domain.dao.AttachmentMapper;
 import com.chao.domain.dao.UserMapper;
 import com.chao.domain.model.Attachment;
@@ -55,7 +56,7 @@ public class UserServiceImpl implements UserService {
             return new Result(ResultCode.businErrorCode.getCode(),"密码不正确");
         }
         String token= jwtTokenUtil.generateToken(userDetails);//生成token
-        redisTemplate.opsForValue().set(userDetails.getUsername(),token,1, TimeUnit.HOURS);//用户token存入redis,已登录过的用户被退出
+        redisTemplate.opsForValue().set(userDetails.getUsername(),token, Constants.TOKEN_EXP, TimeUnit.HOURS);//用户token存入redis,已登录过的用户被退出
         //生成用户信息返回
         user.setUsername(userDetails.getUsername());
         user.setToken(token);

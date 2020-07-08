@@ -1,11 +1,9 @@
 spring:
-  application:
-    name: project-domian
   cloud:
     config:
       # 配置中心的具体地址
       uri: http://49.232.0.86:6000/
       # 对应{application}部分
-      name: project-domain
+      name: project-permission
       # 对应{profile}部分
       profile: dev

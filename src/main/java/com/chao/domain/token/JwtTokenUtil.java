@@ -1,7 +1,5 @@
 package com.chao.domain.token;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -33,7 +31,6 @@ public class JwtTokenUtil {
     private static final String CLAIM_KEY_CREATED = "created";
     @Value("${jwt.secret}")
     private String secret;
-    private final Long expiration=60*10L;//10分钟
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
@@ -53,13 +50,14 @@ public class JwtTokenUtil {
     private String generateToken(Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setExpiration(generateExpirationDate())
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 
     /**
      * 从token中获取JWT中的负载
+     * @auther 杨文超
+     * @date 2020/07/08
      */
     private Claims getClaimsFromToken(String token) {
         Claims claims = null;
@@ -75,14 +73,9 @@ public class JwtTokenUtil {
     }
 
     /**
-     * 生成token的过期时间
-     */
-    private Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + expiration * 1000);
-    }
-
-    /**
      * 从token中获取登录用户名
+     * @auther 杨文超
+     * @date 2020/07/08
      */
     public String getUserNameFromToken(String token) {
         String username;
@@ -96,57 +89,11 @@ public class JwtTokenUtil {
     }
 
     /**
-     * 判断token是否已经失效
-     */
-    public boolean isTokenExpired(String token) {
-        Date expiredDate = getExpiredDateFromToken(token);
-        return expiredDate.before(new Date());
-    }
-
-    /**
-     * 从token中获取过期时间
-     */
-    private Date getExpiredDateFromToken(String token) {
-        Claims claims = getClaimsFromToken(token);
-        return claims.getExpiration();
-    }
-
-    /**
      * token对比
+     * @auther 杨文超
+     * @date 2020/07/08
      */
     public boolean compareToken(String authToken,String redisToken) {
         return authToken.equals(redisToken);
-    }
-
-    /**
-     * 刷新token
-     */
-    public String refreshHeadToken(String oldToken) {
-        if(StrUtil.isEmpty(oldToken)){
-            return null;
-        }
-        //token校验不通过
-        Claims claims = getClaimsFromToken(oldToken);
-        if(claims==null){
-            return null;
-        }
-        claims.put(CLAIM_KEY_CREATED, new Date());
-        return generateToken(claims);
-    }
-
-    /**
-     * 判断token在指定时间内是否刚刚刷新过
-     * @param token 原token
-     * @param time 指定时间（秒）
-     */
-    private boolean tokenRefreshJustBefore(String token, int time) {
-        Claims claims = getClaimsFromToken(token);
-        Date created = claims.get(CLAIM_KEY_CREATED, Date.class);
-        Date refreshDate = new Date();
-        //刷新时间在创建时间的指定时间内
-        if(refreshDate.after(created)&&refreshDate.before(DateUtil.offsetSecond(created,time))){
-            return true;
-        }
-        return false;
     }
 }

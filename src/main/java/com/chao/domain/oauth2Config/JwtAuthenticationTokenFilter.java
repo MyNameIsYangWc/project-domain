@@ -84,7 +84,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         //刷新token
         if(flag && o1 == null){
             final String user= username;
-            MyThreadPoolExecutor.getThreadPoolExecutor().execute(new Runnable() {
+            MyThreadPoolExecutor.getInstance().execute(new Runnable() {
                 @Override
                 public void run() {
                     redisTemplate.expire(user, TOKEN_EXP,TimeUnit.HOURS);//重置token有效期

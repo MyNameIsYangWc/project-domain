@@ -11,24 +11,26 @@ import java.util.concurrent.TimeUnit;
  */
 public class MyThreadPoolExecutor {
 
-    private static ThreadPoolExecutor threadPoolExecutor;
+    private MyThreadPoolExecutor(){}
 
-    static {
-        threadPoolExecutor=new ThreadPoolExecutor(
-                3,//核心线程，不回收
-                20,//线程上线
-                10, TimeUnit.MINUTES,//线程存活时间
-                new SynchronousQueue<>(),//任务队列
-                new ThreadPoolExecutor.CallerRunsPolicy()//拒绝策略，不丢弃
-        );
+    private static class MyThread{
+
+        private static ThreadPoolExecutor INSTANCE =
+                new ThreadPoolExecutor(
+                        3,//核心线程，不回收
+                        20,//线程上线
+                        10, TimeUnit.MINUTES,//线程存活时间
+                        new SynchronousQueue<>(),//任务队列
+                        new ThreadPoolExecutor.CallerRunsPolicy()//拒绝策略，不丢弃
+                );
     }
 
     /**
      * 获取线程池
      * @return
      */
-    public static ThreadPoolExecutor getThreadPoolExecutor(){
-        return threadPoolExecutor;
+    public static ThreadPoolExecutor getInstance(){
+        return MyThread.INSTANCE;
     }
 
 }

@@ -17,7 +17,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -49,6 +52,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result userLogin(User user) {
 
+        HttpServletResponse response= ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
         //根据账号获取用户信息
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         //密码校验
@@ -57,9 +61,9 @@ public class UserServiceImpl implements UserService {
         }
         String token= jwtTokenUtil.generateToken(userDetails);//生成token
         redisTemplate.opsForValue().set(userDetails.getUsername(),token, Constants.TOKEN_EXP, TimeUnit.HOURS);//用户token存入redis,已登录过的用户被退出
+        response.setHeader("token",token);
         //生成用户信息返回
         user.setUsername(userDetails.getUsername());
-        user.setToken(token);
         user.setPassword(null);
         user.setAuthorities(userDetails.getAuthorities());
         user.setEnabled(userDetails.isEnabled());

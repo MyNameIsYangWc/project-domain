@@ -11,7 +11,6 @@ public class User {
     private String password;
     private Collection authorities;
     private boolean enabled;
-    private String token;
     private String fileId;
 
     public String getFileId() {
@@ -57,21 +56,12 @@ public class User {
         return this.enabled;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     @Override
     public String toString() {
         return "User{" +
                 "username='" + username + '\'' +
                 ", authorities=" + authorities +
                 ", enabled=" + enabled +
-                ", token='" + token + '\'' +
                 ", fileId='" + fileId + '\'' +
                 '}';
     }
